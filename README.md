@@ -67,3 +67,39 @@ Next step is to install the dependencies.
 Depending on the package manager being used. Here [uv](https://github.com/astral-sh/uv) is being used, the steps will be different for installing the dependencies. However, the dependencies are outlined in the [pyproject.toml](./pyproject.toml) file. Follow the steps of the package manager used to install dependencies required.
 
 Note that [uv](https://docs.astral.sh/uv/) is the package manager of choice, therefore it is recommended that it is used for this project.
+
+## Project structure
+
+The main source code can be found in the [src](./src/) folder.
+
+``` plain
+face-recog/
+│
+├── output/
+│   └── .gitkeep
+├── training/
+│   └── ben_affleck/
+│       ├── img_1.jpg
+│       └── img_2.png
+│   └── .gitkeep
+├── validation/
+│   ├── ben_affleck1.jpg
+│   └── michael_jordan1.jpg
+├── src/
+│   └── face/
+|      └── __main__.py
+│      └── ... other files
+└── ...other files
+```
+
+> A simple directory structure of the project
+
+Note that the sample provided above may not be in line with the current repository.
+
+### Validation folder
+
+You can place the validation images directly into the validation/ directory. Your validation images need to be images that you don’t train with, but you can identify the people who appear in them.
+
+### Training folder
+
+For training/, you should have images separated by subject into directories with the subject’s name as shown in the example above. Setting the training directory up this way will allow giving the face recognizer the information that it needs to associate a label—the person pictured—with the underlying image data.
