@@ -103,3 +103,10 @@ You can place the validation images directly into the validation/ directory. You
 ### Training folder
 
 For training/, you should have images separated by subject into directories with the subject’s name as shown in the example above. Setting the training directory up this way will allow giving the face recognizer the information that it needs to associate a label—the person pictured—with the underlying image data.
+
+## Technology used
+
+- [Face Recognition](https://github.com/ageitgey/face_recognition) - Facial Recognition API for Python
+- [Python](https://www.python.org/) - Programming Language
+- [Numpy](https://numpy.org/) - Scientific Computing Python Package
+
