@@ -145,3 +145,12 @@ def _display_face(
         name,
         fill="white",
     )
+
+
+def validate(model: ModelType = ModelType.HOG, validation_file_path: Path = Path("validation")) -> None:
+
+    for filepath in validation_file_path.rglob("*"):
+
+        if filepath.is_file():
+
+            recognize_faces(image_location=str(filepath.absolute()), model=model)
