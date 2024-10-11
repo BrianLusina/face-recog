@@ -1,7 +1,7 @@
 from .detector import encode_known_faces, recognize_faces
 
 def main() -> None:
-    encode_known_faces()
+    # encode_known_faces()
     recognize_faces("unknown.jpg")
 
 

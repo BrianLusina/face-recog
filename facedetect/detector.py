@@ -1,14 +1,17 @@
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Tuple, Any, Literal
 from pathlib import Path
 from collections import Counter
 import pickle
 
 import face_recognition
 from numpy.typing import NDArray
+from PIL import Image, ImageDraw
 
 from .models import ModelType
 
 DEFAULT_ENCODINGS_PATH = Path("output/encodings.pkl")
+BOUNDING_BOX_COLOR = "blue"
+TEXT_COLOR = "white"
 
 # Creates the 3 directories if they do not already exist
 Path("training").mkdir(exist_ok=True)
@@ -81,6 +84,10 @@ def recognize_faces(
         face_image=input_image, known_face_locations=input_face_locations
     )
 
+    pillow_image = Image.fromarray(input_image)
+    # this will help with drawing a bounding box around the detected image
+    draw = ImageDraw.Draw(pillow_image)
+
     # Now we use the encoding of the detected face to make a comparison with all of the encodings that were found in the previous step.
     # This will happen within a loop so that we can detect and recognize multiple faces in the unknown image
 
@@ -90,7 +97,10 @@ def recognize_faces(
         name = _recognize_face(unknown_encoding, loaded_encodings)
         if not name:
             name = "Unknown"
-        print(name, bounding_box)
+        _display_face(draw, bounding_box, name)
+
+    del draw
+    pillow_image.show()
 
 
 def _recognize_face(
@@ -115,3 +125,23 @@ def _recognize_face(
     )
     if votes:
         return votes.most_common(1)[0][0]
+
+
+def _display_face(
+    draw: ImageDraw,
+    bounding_box: Tuple[int, Any, Any, int],
+    name: NDArray | Literal["Unknown"],
+) -> None:
+    top, right, bottom, left = bounding_box
+    draw.rectangle(((left, top), (right, bottom)), outline=BOUNDING_BOX_COLOR)
+    text_left, text_top, text_right, text_bottom = draw.textbbox((left, bottom), name)
+    draw.rectangle(
+        ((text_left, text_top), (text_right, text_bottom)),
+        fill="blue",
+        outline="blue",
+    )
+    draw.text(
+        (text_left, text_top),
+        name,
+        fill="white",
+    )
