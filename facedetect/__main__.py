@@ -1,8 +1,8 @@
-from .detector import encode_known_faces
+from .detector import encode_known_faces, recognize_faces
 
 def main() -> None:
-    print("Encoding known faces!")
     encode_known_faces()
+    recognize_faces("unknown.jpg")
 
 
 if __name__ == "__main__":

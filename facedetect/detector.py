@@ -1,7 +1,10 @@
+from typing import Optional, Dict, List
 from pathlib import Path
+from collections import Counter
 import pickle
 
 import face_recognition
+from numpy.typing import NDArray
 
 from .models import ModelType
 
@@ -46,9 +49,69 @@ def encode_known_faces(
             encodings.append(encoding)
 
     # The names and encodings are combined into a dictionary and saved to disk. This is because
-    # generating encodings can be time-consuming, especially if you don’t have a dedicated GPU. 
-    # Once they’re generated, saving them allows you to reuse the encodings in other parts of your code without re-creating 
+    # generating encodings can be time-consuming, especially if you don’t have a dedicated GPU.
+    # Once they’re generated, saving them allows you to reuse the encodings in other parts of your code without re-creating
     # them every time.
     name_encodings = dict(names=names, encodings=encodings)
     with encodings_location.open("wb") as f:
         pickle.dump(name_encodings, f)
+
+
+def recognize_faces(
+    image_location: str,
+    model: ModelType = ModelType.HOG,
+    encodings_location: Path = DEFAULT_ENCODINGS_PATH,
+) -> None:
+    """Recognizes faces in images that don't have a label
+
+    Args:
+        image_location (str): image location
+        model (ModelType): Model type to use, defaults to ModelType.HOG
+        encoding_location (Path, optional): encoding location. Defaults to DEFAULT_ENCODINGS_PATH.
+    """
+
+    with encodings_location.open("rb") as f:
+        loaded_encodings = pickle.load(f)
+
+    input_image = face_recognition.load_image_file(image_location)
+
+    input_face_locations = face_recognition.face_locations(input_image, model=model)
+
+    input_face_encodings = face_recognition.face_encodings(
+        face_image=input_image, known_face_locations=input_face_locations
+    )
+
+    # Now we use the encoding of the detected face to make a comparison with all of the encodings that were found in the previous step.
+    # This will happen within a loop so that we can detect and recognize multiple faces in the unknown image
+
+    for bounding_box, unknown_encoding in zip(
+        input_face_locations, input_face_encodings
+    ):
+        name = _recognize_face(unknown_encoding, loaded_encodings)
+        if not name:
+            name = "Unknown"
+        print(name, bounding_box)
+
+
+def _recognize_face(
+    unknown_encoding: NDArray, loaded_encodings: Dict[str, List[NDArray]]
+) -> Optional[NDArray]:
+    """Recognize an unknown encoding of a face and compare it to the previous loaded encodings
+    If a face matches, then it is returned. If not, None is returned
+
+    Args:
+        unknown_encoding (NDArray): Encoding of an unmatched face
+        loaded_encodings (Dict[str, List[NDArray]]): Loaded encodings of previously matched faces
+
+    Returns:
+        Optional[NDArray]: encoding of matched face
+    """
+    boolean_matches = face_recognition.compare_faces(
+        known_face_encodings=loaded_encodings["encodings"],
+        face_encoding_to_check=unknown_encoding,
+    )
+    votes = Counter(
+        name for match, name in zip(boolean_matches, loaded_encodings["names"]) if match
+    )
+    if votes:
+        return votes.most_common(1)[0][0]

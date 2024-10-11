@@ -6,3 +6,4 @@ __pycache__/
 training/*
 validation/*
 output/*
+unknown.jpg
