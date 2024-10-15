@@ -7,3 +7,6 @@ training/*
 validation/*
 output/*
 unknown.jpg
+dist/
+*.egg-info/
+.ruff_cache/

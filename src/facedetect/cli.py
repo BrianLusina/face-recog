@@ -29,9 +29,11 @@ def get_command_line_args() -> Namespace:
         action="store",
         default=ModelType.HOG.name,
         choices=[ModelType.HOG.name, ModelType.CNN.name],
-        help="Which model to use for training: hog(CPU), cnn(GPU)"
+        help="Which model to use for training: hog(CPU), cnn(GPU)",
     )
-    
-    parser.add_argument("-f", action="store", help="Path to an image with an unknown face")
-    
+
+    parser.add_argument(
+        "-f", action="store", help="Path to an image with an unknown face"
+    )
+
     return parser.parse_args()
