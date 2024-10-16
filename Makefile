@@ -9,3 +9,6 @@ format: ## format with Ruff
 
 build: ## build application
 	uv build
+
+publish:
+	uv publish

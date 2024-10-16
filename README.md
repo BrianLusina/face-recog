@@ -1,5 +1,8 @@
 # FaceRecog
 
+[![Lint](https://github.com/BrianLusina/face-recog/actions/workflows/lint.yaml/badge.svg)](https://github.com/BrianLusina/face-recog/actions/workflows/lint.yaml)
+[![Code Scanning](https://github.com/BrianLusina/face-recog/actions/workflows/codeql.yaml/badge.svg)](https://github.com/BrianLusina/face-recog/actions/workflows/codeql.yaml)
+
 This is a simple Python CLI program that is trained to learn to recognize and detect faces.
 
 Note this program works well for training on images that contain a single face. If you want to train on images with multiple identifiable faces, then feel free to add an alternative strategy for marking the faces in the training images for the program to detect.
