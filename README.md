@@ -1,5 +1,8 @@
 # FaceRecog
 
+[![Lint](https://github.com/BrianLusina/face-recog/actions/workflows/lint.yaml/badge.svg)](https://github.com/BrianLusina/face-recog/actions/workflows/lint.yaml)
+[![Code Scanning](https://github.com/BrianLusina/face-recog/actions/workflows/codeql.yaml/badge.svg)](https://github.com/BrianLusina/face-recog/actions/workflows/codeql.yaml)
+
 This is a simple Python CLI program that is trained to learn to recognize and detect faces.
 
 Note this program works well for training on images that contain a single face. If you want to train on images with multiple identifiable faces, then feel free to add an alternative strategy for marking the faces in the training images for the program to detect.
@@ -104,9 +107,41 @@ You can place the validation images directly into the validation/ directory. You
 
 For training/, you should have images separated by subject into directories with the subject’s name as shown in the example above. Setting the training directory up this way will allow giving the face recognizer the information that it needs to associate a label—the person pictured—with the underlying image data.
 
+## Running the CLI
+
+In order to run the CLI, ensure that the above steps are complete first and then in a terminal(that has the virtual environment setup), run:
+
+```shell
+python -m facedetect --help
+```
+
+This will display the following output:
+
+```plain
+usage: face-recog [-h] [--train] [--validate] [--test] [-m {HOG,CNN}] [-f F]
+
+Recognize faces in an image
+
+options:
+  -h, --help            show this help message and exit
+  --train               Train on input data
+  --validate            Validate trained model
+  --test                Test the model with an unknown image
+  -m {HOG,CNN}, --model {HOG,CNN}
+                        Which model to use for training: hog(CPU), cnn(GPU)
+  -f F                  Path to an image with an unknown face
+```
+
+You will then be able to test out the CLI program by passing in arguments desired to either train the model using a given model or validate and test the model, e.g.
+
+```shell
+python -m facedetect -m="HOG" --train
+```
+
+> This will train the program using the HOG model. Note that this may take some time to run as it is a CPU based task, therefore, this depends on the CPU this program runs on and the number of images it is trained on.
+
 ## Technology used
 
 - [Face Recognition](https://github.com/ageitgey/face_recognition) - Facial Recognition API for Python
 - [Python](https://www.python.org/) - Programming Language
 - [Numpy](https://numpy.org/) - Scientific Computing Python Package
-

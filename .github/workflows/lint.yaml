@@ -1,0 +1,22 @@
+name: Lint
+
+on:
+  - push
+  - pull_request
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  lint:
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+    name: ruff
+    uses: SanctumLabs/ci-workflows/.github/workflows/python-lint-ruff.yml@main
+    with:
+      python-version: ${{ matrix.python-version }}
+      packager: uv
+      ruff-args: "check"
+      ruff-version: "0.6.9"
