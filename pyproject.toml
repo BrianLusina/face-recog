@@ -10,5 +10,5 @@ dependencies = [
     "numpy>=2.5.1",
     "pillow>=12.3.0",
     "ruff>=0.16.2",
-    "setuptools>=83.0.0",
+    "setuptools>=84.0.0",
 ]
